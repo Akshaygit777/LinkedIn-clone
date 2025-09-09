@@ -1,7 +1,19 @@
-export default function Home() {
+import Feed from "@/components/Feed";
+import News from "@/components/News";
+import Sidebar from "@/components/Sidebar";
+import { currentUser } from "@clerk/nextjs/server";
+
+
+export default async function Home() {
+  const user  = await currentUser();
   return (
-    <div>
-      Home
+    <div className="pt-20">
+      <div className="max-w-6xl mx-auto flex justify-betweeen gap-80">
+      <Sidebar user = {user}/>
+      <Feed/>
+      <News/>
+      </div>
+      
     </div>
   );
 }

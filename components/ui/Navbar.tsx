@@ -8,7 +8,7 @@ import { Button } from './button'
 
 const Navbar = () => {
   return (
-    <div className='fixed w-full  bg-[#0f172a] z-50 '>
+    <div className='fixed w-full  bg-[#0f172a] z-50 shadow-[0_8px_16px_rgba(0,0,0,0.7)]'>
         <div className='flex items-center max-w-6xl justify-between h-14 mx-auto px-3'>
             <div className='flex items-center gap-3'>
                 <Image
@@ -29,7 +29,7 @@ const Navbar = () => {
                     <UserButton/>
                     </SignedIn>
                     <SignedOut>
-                   <Button className='rounded-full' variant={"secondary"}>
+                   <Button className='rounded-full bg-gray-500 text-black' variant={"secondary"}  >
                     <SignInButton/>
                    </Button>
                     </SignedOut>
