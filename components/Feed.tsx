@@ -1,8 +1,13 @@
 import React from 'react'
+import PostInput from './PostInput'
+import Posts from './Posts'
 
-const Feed = () => {
+const Feed = ({user}:{user:any}) => {
   return (
-    <div>Feed</div>
+    <div className='flex-1'>
+      <PostInput user ={user}/>
+      <Posts/>
+    </div>
   )
 }
 

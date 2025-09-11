@@ -27,12 +27,12 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" className="bg-black min-h-screen>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
  <Navbar/>
- <div className="flex-1 w-full">
+ <div className="flex-1 bg-[#000000] w-full ">
   <main className="max-w-6xl mx-auto">
   {children}
   </main>
