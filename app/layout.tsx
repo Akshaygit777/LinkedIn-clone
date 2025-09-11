@@ -4,7 +4,6 @@ import "./globals.css";
 import Navbar from "@/components/ui/Navbar";
 import { ClerkProvider } from "@clerk/nextjs";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -27,20 +26,16 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" className="bg-black min-h-screen>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
- <Navbar/>
- <div className="flex-1 bg-[#000000] w-full ">
-  <main className="max-w-6xl mx-auto">
-  {children}
-  </main>
- </div>
-      
-      </body>
-    </html>
+      <html lang="en" className="min-h-screen">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-[#000000] min-h-screen flex flex-col`}
+        >
+          <Navbar />
+          <div className="flex-1 w-full">
+            <main className="max-w-6xl mx-auto">{children}</main>
+          </div>
+        </body>
+      </html>
     </ClerkProvider>
-    
   );
 }

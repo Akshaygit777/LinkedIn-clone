@@ -8,7 +8,7 @@ import { Button } from './button'
 
 const Navbar = () => {
   return (
-    <div className='fixed w-full  bg-[#121917] z-50 shadow-[0_8px_16px_rgba(0,0,0,0.46)] border border-gray-800'>
+    <div className='fixed w-full  bg-[#161722] z-50 shadow-[0_8px_16px_rgba(0,0,0,0.46)] border border-gray-800'>
         <div className='flex items-center max-w-6xl justify-between h-14 mx-auto px-3'>
             <div className='flex items-center gap-3'>
                 <Image
