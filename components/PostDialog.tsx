@@ -1,48 +1,86 @@
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog"
 import ProfilePhoto from "./shared/ProfilePhoto"
+import { Textarea } from "./ui/textarea"
+import { Images } from "lucide-react"
+import { useRef, useState } from "react"
+import { readFileAsDataUrl } from "@/lib/utils"
+import Image from "next/image"
 
-export function PostDialog({setOpen, open ,src}:{setOpen:any , open:boolean, src:string}) {
+export function PostDialog({ setOpen, open, src }: { setOpen: any; open: boolean; src: string }) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [selectedFile, setSelectedFile] = useState<string>("");
+const fileChangeHandler = async  (e:React.ChangeEvent<HTMLInputElement>) => {
+  const file = e.target.files?.[0];
+  if(file){
+    const dataUrl =  await readFileAsDataUrl(file);
+    setSelectedFile(dataUrl);
+  }
+}
+
   return (
-    <Dialog open ={open}>
-      <form>
-        <DialogContent onInteractOutside={() => setOpen(false)} className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle className="flex gap-2">
-                <ProfilePhoto
-                src={src}/>
-                <div>
-                    <h1>Akshay</h1>
-                    <p className="text-xs">Post to Anyone</p>
-                </div>
-            </DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
-            </DialogDescription>
-          </DialogHeader>
-         <form action="">
-            <div className="flex flex-col">
-                
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogContent className="sm:max-w-[425px] bg-[#161722] border border-gray-800" onInteractOutside={() => setOpen(false)}>
+        <DialogHeader>
+          <DialogTitle className="flex gap-2">
+            <ProfilePhoto src={src} />
+            <div className="text-white">
+              <h1 className="font-bold">Akshay</h1>
+              <p className="text-xs mt-1 text-gray-300">Post to Anyone</p>
             </div>
-         </form>
+          </DialogTitle>
+        </DialogHeader>
+
+        <form className="space-y-4 bg-[#161722]">
+          <div className="flex flex-col">
+            <Textarea
+   
+              id="name"
+              name="inputText"
+              className="border-none text-lg focus-visible:ring-0 text-white"
+              placeholder="What's on your mind?"
+            />
+            <div className="my-4"></div>
+            {
+            selectedFile && (
+              <Image
+              src = {selectedFile}
+              alt="preview-image"
+              width={400}
+              height={300}
+              />
+            )
+            }
+            
+     
+          </div>
+
           <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
-            </DialogClose>
-            <Button type="submit">Save changes</Button>
+            <div className="flex items-center gap-4">
+              <input ref ={inputRef} onChange={fileChangeHandler}   type="file" name="image" className="hidden" accept="image/*" />
+            
+            </div>
+          
           </DialogFooter>
-        </DialogContent>
-      </form>
+        </form>
+        <div className="flex justify-between ">
+       
+        <Button  className="gap-2 "onClick={()=>inputRef?.current?.click()}>
+          <Images className="text-blue-500"/>
+          
+        </Button>
+        <Button className="bg-black text-white hover:bg-gray-600" variant="outline" type="submit">
+                Post
+              </Button>
+        </div>
+       
+      </DialogContent>
     </Dialog>
   )
 }
