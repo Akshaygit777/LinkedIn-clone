@@ -16,11 +16,24 @@ import Image from "next/image"
 export function PostDialog({ setOpen, open, src }: { setOpen: any; open: boolean; src: string }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [selectedFile, setSelectedFile] = useState<string>("");
+  const [inputText, setInputText] = useState<string>("");
+  const changeHandler = (e:any) => {
+    setInputText(e.target.value);
+  }
 const fileChangeHandler = async  (e:React.ChangeEvent<HTMLInputElement>) => {
   const file = e.target.files?.[0];
   if(file){
     const dataUrl =  await readFileAsDataUrl(file);
     setSelectedFile(dataUrl);
+  }
+}
+
+const postActionHandler = async (formData:FormData)=> {
+  const inputText = formData.get('inputText') as string;
+  try{
+ await createPostAction(inputText,selectedFile);
+  }catch(error){
+    console.log('error occurred', error);
   }
 }
 
@@ -33,164 +46,19 @@ const fileChangeHandler = async  (e:React.ChangeEvent<HTMLInputElement>) => {
             <div className="text-white">
               <h1 className="font-bold">Akshay</h1>
               <p className="text-xs mt-1 text-gray-300">Post to Anyone</p>
-            </div
+            </div>
             
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            >
           </DialogTitle>
         </DialogHeader>
 
-        <form className="space-y-4 bg-[#161722]">
+        <form className="space-y-4 bg-[#161722]" action={postActionHandler}>
           <div className="flex flex-col">
             <Textarea
    
               id="name"
               name="inputText"
+              value={inputText}
+              onChange={changeHandler}
               className="border-none text-lg focus-visible:ring-0 text-white"
               placeholder="What's on your mind?"
             />
@@ -216,17 +84,18 @@ const fileChangeHandler = async  (e:React.ChangeEvent<HTMLInputElement>) => {
             </div>
           
           </DialogFooter>
-        </form>
-        <div className="flex justify-between ">
+          <div className="flex justify-between ">
        
-        <Button  className="gap-2 "onClick={()=>inputRef?.current?.click()}>
-          <Images className="text-blue-500"/>
-          
-        </Button>
-        <Button className="bg-black text-white hover:bg-gray-600" variant="outline" type="submit">
-                Post
-              </Button>
-        </div>
+       <Button  className="gap-2 "onClick={()=>inputRef?.current?.click()}>
+         <Images className="text-blue-500"/>
+         
+       </Button>
+       <Button className="bg-black text-white hover:bg-gray-600" variant="outline" type="submit">
+               Post
+             </Button>
+       </div>
+        </form>
+      
        
       </DialogContent>
     </Dialog>
