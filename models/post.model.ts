@@ -1,11 +1,12 @@
 import mongoose, { Model } from "mongoose";
 import { IUser } from "./user.model";
+import { IComment } from "./comment.model";
 export interface IPost{
    description:string,
    user:IUser,
    imageUrl?:string,
    likes?:string[],
-   comments:any
+   comments?:IComment[]
    
 }
 export interface IPostDocument extends IPost , Document{
@@ -38,10 +39,10 @@ user:{
   likes:{
     type:[String]
   },
-  comments:{
+  comments:[{
     type:mongoose.Schema.Types.ObjectId,
     ref:'Comment'
-  }
+  }]
 
     
 }
