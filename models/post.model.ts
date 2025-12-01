@@ -35,7 +35,13 @@ user:{
   lastName:{
     type:String,
     required:true
+  }
+},
+  imageUrl:{
+    type:String,
+    default:"",
   },
+
   likes:{
     type:[String]
   },
@@ -45,6 +51,6 @@ user:{
   }]
 
     
-}
+
 },{timestamps:true});
 export const Post: Model<IPostDocument> = mongoose.models?.Post || mongoose.model<IPostDocument>("Post",postSchema);
