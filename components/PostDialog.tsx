@@ -15,32 +15,37 @@ import Image from "next/image"
 import { createPostAction } from "@/lib/serveractions"
 
 export function PostDialog({ setOpen, open, src }: { setOpen: any; open: boolean; src: string }) {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState<string>("");
-  const [inputText, setInputText] = useState<string>("");
-  const changeHandler = (e:any) => {
-    setInputText(e.target.value);
-  }
-const fileChangeHandler = async  (e:React.ChangeEvent<HTMLInputElement>) => {
-  const file = e.target.files?.[0];
-  if(file){
-    const dataUrl =  await readFileAsDataUrl(file);
-    setSelectedFile(dataUrl);
-  }
-}
+  const inputRef = useRef<HTMLInputElement>(null)
+  const [selectedFile, setSelectedFile] = useState<string>("")
+  const [inputText, setInputText] = useState<string>("")
 
-const postActionHandler = async (formData:FormData)=> {
-  const inputText = formData.get('inputText') as string;
-  try{
- await createPostAction(inputText,selectedFile);
-  }catch(error){
-    console.log('error occurred', error);
+  const changeHandler = (e: any) => {
+    setInputText(e.target.value)
   }
-}
+
+  const fileChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const dataUrl = await readFileAsDataUrl(file)
+      setSelectedFile(dataUrl)
+    }
+  }
+
+  const postActionHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    try {
+      await createPostAction(inputText, selectedFile)
+    } catch (error) {
+      console.log(error)
+    }
+    setInputText("")
+    setSelectedFile("")
+    setOpen(false)
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[425px] bg-[#161722] border border-gray-800" onInteractOutside={() => setOpen(false)}>
+      <DialogContent className="sm:max-w-[425px] bg-[#161722] border border-gray-800">
         <DialogHeader>
           <DialogTitle className="flex gap-2">
             <ProfilePhoto src={src} />
@@ -48,14 +53,12 @@ const postActionHandler = async (formData:FormData)=> {
               <h1 className="font-bold">Akshay</h1>
               <p className="text-xs mt-1 text-gray-300">Post to Anyone</p>
             </div>
-            
           </DialogTitle>
         </DialogHeader>
 
-        <form className="space-y-4 bg-[#161722]" action={postActionHandler}>
+        <form onSubmit={postActionHandler} className="space-y-4 bg-[#161722]">
           <div className="flex flex-col">
             <Textarea
-   
               id="name"
               name="inputText"
               value={inputText}
@@ -63,41 +66,37 @@ const postActionHandler = async (formData:FormData)=> {
               className="border-none text-lg focus-visible:ring-0 text-white"
               placeholder="What's on your mind?"
             />
-            <div className="my-4"></div>
-            {
-            selectedFile && (
-              <Image
-              src = {selectedFile}
-              alt="preview-image"
-              width={400}
-              height={300}
-              />
-            )
-            }
-            
-     
+
+            <div className="my-4" />
+
+            {selectedFile && (
+              <Image src={selectedFile} alt="preview-image" width={400} height={300} />
+            )}
           </div>
 
           <DialogFooter>
             <div className="flex items-center gap-4">
-              <input ref ={inputRef} onChange={fileChangeHandler}   type="file" name="image" className="hidden" accept="image/*" />
-            
+              <input
+                ref={inputRef}
+                onChange={fileChangeHandler}
+                type="file"
+                name="image"
+                className="hidden"
+                accept="image/*"
+              />
             </div>
-          
           </DialogFooter>
-          <div className="flex justify-between ">
-       
-       <Button  className="gap-2 "onClick={()=>inputRef?.current?.click()}>
-         <Images className="text-blue-500"/>
-         
-       </Button>
-       <Button className="bg-black text-white hover:bg-gray-600" variant="outline" type="submit">
-               Post
-             </Button>
-       </div>
+
+          <div className="flex justify-between">
+            <Button className="gap-2" onClick={() => inputRef?.current?.click()} type="button">
+              <Images className="text-blue-500" />
+            </Button>
+
+            <Button className="bg-black text-white hover:bg-gray-600" variant="outline" type="submit">
+              Post
+            </Button>
+          </div>
         </form>
-      
-       
       </DialogContent>
     </Dialog>
   )
