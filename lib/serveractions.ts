@@ -45,3 +45,14 @@ export const createPostAction = async (inputText:string,selectedFile:string) => 
         throw new Error(error);
     }
 }
+export const getAllPosts = async ()=>{
+    await connectDB();
+    try{
+const posts = await Post.find().sort({createdAt:-1});
+return JSON.parse(JSON.stringify(posts));
+
+    } catch(error){
+        console.log(error);
+
+    }
+}
