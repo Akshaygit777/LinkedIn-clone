@@ -8,6 +8,8 @@ import { IPostDocument } from '@/models/post.model'
 import PostContent from './PostContent'
 import { Badge } from './ui/badge'
 import SocialOptions from './SocialOptions'
+import ReactTimeago from 'react-timeago'
+
 
 
 
@@ -24,8 +26,9 @@ const Post = ({ post }: { post: IPostDocument }) => {
                     <div>
                         <h1 className='text-sm font-bold text-white'>{fullName} <Badge variant={'secondary'} className='ml-2 bg-gray-500'>You</Badge></h1>
                         <p className='text-xs text-gray-500 text-white'>@{user ? user?.username : "username"}</p>
-
+                       
                         <p className='text-xs text-gray-300'>
+                        <ReactTimeago date = {new Date (post.createdAt)}/>
                            
                         </p>
                     </div>
@@ -43,7 +46,7 @@ const Post = ({ post }: { post: IPostDocument }) => {
                 </div>
             </div>
             <PostContent post={post} />
-            <SocialOptions/>
+            <SocialOptions post = {post}/>
     
         </div>
     )

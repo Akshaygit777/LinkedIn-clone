@@ -5,6 +5,7 @@ import { IUser } from "@/models/user.model";
 import { currentUser } from "@clerk/nextjs/server"
 import { v2 as cloudinary } from 'cloudinary'
 import connectDB from "./db";
+import { revalidatePath } from "next/cache";
 cloudinary.config({ 
     cloud_name: process.env.CLOUD_NAME, 
     api_key: process.env.API_KEY, 
@@ -40,6 +41,7 @@ export const createPostAction = async (inputText:string,selectedFile:string) => 
             })
 
         }
+        revalidatePath("/");
 
     } catch(error:any){
         throw new Error(error);
