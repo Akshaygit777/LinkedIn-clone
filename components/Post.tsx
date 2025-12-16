@@ -9,6 +9,7 @@ import PostContent from './PostContent'
 import { Badge } from './ui/badge'
 import SocialOptions from './SocialOptions'
 import ReactTimeago from 'react-timeago'
+import { deletePostAction } from '@/lib/serveractions'
 
 
 
@@ -37,7 +38,7 @@ const Post = ({ post }: { post: IPostDocument }) => {
                     {
                         loggedInUser && (
                             <Button  onClick={() => {
-                                // const res = deletePostAction(post._id);
+                                 const res = deletePostAction(post._id);
                             }} size={'icon'} className='rounded-full bg-gray-700' variant={'outline'}>
                                 <Trash2/>
                             </Button>

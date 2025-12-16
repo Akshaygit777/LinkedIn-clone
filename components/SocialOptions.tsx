@@ -46,33 +46,33 @@ const SocialOptions = ({ post }: { post: IPostDocument }) => {
     }
     return (
         <div>
-            <div className='text-sm mx-2 p-2 flex items-center justify-between border-b border-gray-300'>
+            <div className='text-sm mx-2 p-2 flex items-center justify-between border-b border-gray-800'>
                 {
-                    (likes && likes.length > 0) && (<p className='text-xm text-gray-500 hover:text-blue-500 hover:underline hover:cursor-pointer'>{likes.length} likes</p>)
+                    (likes && likes.length > 0) && (<p className='text-xm text-gray-300 hover:text-blue-500 hover:underline hover:cursor-pointer'>{likes.length} likes</p>)
                 }
                 {
-                    (post.comments && post.comments.length > 0) && (<p onClick={()=>setCommentOpen(!commentOpen)} className='text-xm text-gray-500 hover:text-blue-500 hover:underline hover:cursor-pointer'>{post.comments.length} message</p>)
+                    (post.comments && post.comments.length > 0) && (<p onClick={()=>setCommentOpen(!commentOpen)} className='text-xm text-gray-300 hover:text-blue-500 hover:underline hover:cursor-pointer'>{post.comments.length} message</p>)
                 }
             </div>
             <div className='flex items-center m-1 justify-between'>
                 <Button
                     onClick={likeOrDislikeHandler}
                     variant={'ghost'}
-                    className='flex items-center gap-1 rounded-lg text-gray-600 hover:text-black'>
+                    className='flex items-center gap-1 rounded-lg text-gray-300 hover:text-black'>
                     <ThumbsUp
                         className={`${liked && 'fill-[#378FE9]'}`}
                     />
                     <p className={`${liked && 'text-[#378FE9]'}`}>Like</p>
                 </Button>
-                <Button onClick={()=>setCommentOpen(!commentOpen)} variant={'ghost'} className='flex items-center gap-1 rounded-lg text-gray-600 hover:text-black'>
+                <Button onClick={()=>setCommentOpen(!commentOpen)} variant={'ghost'} className='flex items-center gap-1 rounded-lg text-gray-300 hover:text-black'>
                     <MessageCircleMore />
                     <p>Message</p>
                 </Button>
-                <Button variant={'ghost'} className='flex items-center gap-1 rounded-lg text-gray-600 hover:text-black'>
+                <Button variant={'ghost'} className='flex items-center gap-1 rounded-lg text-gray-300 hover:text-black'>
                     <Repeat />
                     <p>Repost</p>
                 </Button>
-                <Button variant={'ghost'} className='flex items-center gap-1 rounded-lg text-gray-600 hover:text-black'>
+                <Button variant={'ghost'} className='flex items-center gap-1 rounded-lg text-gray-300 hover:text-black'>
                     <Send />
                     <p>Send</p>
                 </Button>
