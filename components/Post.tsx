@@ -25,7 +25,7 @@ const Post = ({ post }: { post: IPostDocument }) => {
                 <ProfilePhoto src={post?.user?.profilePhoto!} />
                 <div className='flex items-center justify-between w-full'>
                     <div>
-                        <h1 className='text-sm font-bold text-white'>{fullName} <Badge variant={'secondary'} className='ml-2 bg-gray-500'>You</Badge></h1>
+                        <h1 className='text-sm font-bold text-white'>{fullName}</h1>
                         <p className='text-xs text-gray-500 text-white'>@{user ? user?.username : "username"}</p>
                        
                         <p className='text-xs text-gray-300'>
