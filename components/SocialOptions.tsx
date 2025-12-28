@@ -3,87 +3,117 @@ import { Button } from './ui/button'
 import { MessageCircleMore, Repeat, Send, ThumbsUp } from 'lucide-react'
 import { IPostDocument } from '@/models/post.model';
 import { useUser } from '@clerk/nextjs';
-//import CommentInput from './CommentInput';
-//import Comments from './Comments';
+import CommentInput from './CommentInput';
+import Comments from './Comments';
 
 const SocialOptions = ({ post }: { post: IPostDocument }) => {
     const { user } = useUser();
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState(post.likes);
     const [commentOpen, setCommentOpen] = useState(false);
-
+    const [isProcessingLike, setIsProcessingLike] = useState(false);
     const likeOrDislikeHandler = async () => {
-        if (!user) throw new Error(' User not athenticated');
-        const tempLiked = liked;
-        const tempLikes = likes;
-        const dislike = likes?.filter((userId) => userId !== user.id);
-        const like = [...(likes ?? []), user.id];
-        const newLike = liked ? dislike : like;
-
-        setLiked(!liked);
-        setLikes(newLike);
-
-        const res = await fetch(`/api/posts/${post._id}/${liked ? '/dislike' : '/like'}`, {
+        if (!user?.id || isProcessingLike) return;
+      
+        const userId = user.id;
+        const shouldLike = !liked;
+      
+        
+        setLiked(shouldLike);
+        setLikes(prev => 
+          shouldLike 
+            ? [...(prev ?? []), userId]
+            : (prev ?? []).filter(id => id !== userId)
+        );
+      
+        setIsProcessingLike(true);
+      
+        const endpoint = shouldLike ? 'like' : 'dislike';
+      
+        try {
+          const response = await fetch(`/api/posts/${post._id}/${endpoint}`, {
             method: 'POST',
-            headers: {
-                'Content-Type': "application/json"
-            },
-            body: JSON.stringify(user.id),
-        });
-        if (!res.ok) {
-            setLiked(tempLiked);
-            throw new Error('Failed to like or dislike')
+            body: JSON.stringify({ userId }),
+            headers: { 'Content-Type': 'application/json' },
+          });
+      
+          if (!response.ok) throw response;
+      
+          const data = await response.json();
+          const freshLikes = Array.isArray(data.likes) ? data.likes : likes;
+      
+          setLikes(freshLikes);
+          setLiked(freshLikes.includes(userId));
+        } catch {
+          
+          console.debug('Like request failed but keeping optimistic state');
+        } finally {
+          setIsProcessingLike(false);
         }
-
-        const fetchAllLikes = await fetch(`/api/posts/${post._id}/like`);
-        if (!fetchAllLikes.ok) {
-            setLikes(tempLikes);
-            throw new Error('Failed to fetch like');
-        }
-
-        const likeData = await fetchAllLikes.json();
-        setLikes(likeData);
-    }
+      };
     return (
         <div>
             <div className='text-sm mx-2 p-2 flex items-center justify-between border-b border-gray-800'>
-                {
-                    (likes && likes.length > 0) && (<p className='text-xm text-gray-300 hover:text-blue-500 hover:underline hover:cursor-pointer'>{likes.length} likes</p>)
-                }
-                {
-                    (post.comments && post.comments.length > 0) && (<p onClick={()=>setCommentOpen(!commentOpen)} className='text-xm text-gray-300 hover:text-blue-500 hover:underline hover:cursor-pointer'>{post.comments.length} message</p>)
-                }
+                {(likes && likes.length > 0) && (
+                    <p className='text-sm text-gray-300 hover:text-blue-500 hover:underline hover:cursor-pointer'>
+                        {likes.length} {likes.length === 1 ? 'like' : 'likes'}
+                    </p>
+                )}
+                {(post.comments && post.comments.length > 0) && (
+                    <p 
+                        onClick={() => setCommentOpen(!commentOpen)} 
+                        className='text-sm text-gray-300 hover:text-blue-500 hover:underline hover:cursor-pointer'
+                    >
+                        {post.comments.length} {post.comments.length === 1 ? 'comment' : 'comments'}
+                    </p>
+                )}
             </div>
+
             <div className='flex items-center m-1 justify-between'>
                 <Button
                     onClick={likeOrDislikeHandler}
                     variant={'ghost'}
-                    className='flex items-center gap-1 rounded-lg text-gray-300 hover:text-black'>
-                    <ThumbsUp
-                        className={`${liked && 'fill-[#378FE9]'}`}
-                    />
-                    <p className={`${liked && 'text-[#378FE9]'}`}>Like</p>
+                    disabled={isProcessingLike}
+                    className='flex items-center gap-1 rounded-lg text-gray-300 hover:text-black'
+                >
+                    {isProcessingLike ? (
+                        <div className="w-5 h-5 border-2 border-t-transparent border-blue-500 rounded-full animate-spin" />
+                    ) : (
+                        <ThumbsUp
+                            className={`${liked && 'fill-[#378FE9] stroke-[#378FE9]'}`}
+                        />
+                    )}
+                    <p className={`${liked && 'text-[#378FE9]'}`}>
+                        {isProcessingLike ? '' : 'Like'}
+                    </p>
                 </Button>
-                <Button onClick={()=>setCommentOpen(!commentOpen)} variant={'ghost'} className='flex items-center gap-1 rounded-lg text-gray-300 hover:text-black'>
+
+                <Button 
+                    onClick={() => setCommentOpen(!commentOpen)} 
+                    variant={'ghost'} 
+                    className='flex items-center gap-1 rounded-lg text-gray-300 hover:text-black'
+                >
                     <MessageCircleMore />
-                    <p>Message</p>
+                    <p>Comment</p>
                 </Button>
+
                 <Button variant={'ghost'} className='flex items-center gap-1 rounded-lg text-gray-300 hover:text-black'>
                     <Repeat />
                     <p>Repost</p>
                 </Button>
+
                 <Button variant={'ghost'} className='flex items-center gap-1 rounded-lg text-gray-300 hover:text-black'>
                     <Send />
-                    <p>Send</p>
+                    <p>Share</p>
                 </Button>
             </div>
-            {
-                commentOpen && (
-                    <div className='p-4'>
-                       
-                    </div>
-                )
-            }
+
+            {commentOpen && (
+                <div className='p-4 border-t border-gray-800'>
+                    <CommentInput postId={post._id} />
+                    <Comments post={post} />
+                </div>
+            )}
         </div>
     )
 }
