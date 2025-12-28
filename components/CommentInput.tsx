@@ -12,14 +12,14 @@ const CommentInput = ({ postId }: { postId: string }) => {
         try {
             if(!user) throw new Error('User not authenticated');
             await createCommentAction(postId, formData);
-        } catch (error) {
+        } catch {
             throw new Error('An error occured');
         }
     }
     return (
         <form action={(formData)=> commentActionHandler(formData)}>
             <div className='flex items-center gap-2'>
-                <ProfilePhoto src={user?.imageUrl!} />
+                <ProfilePhoto src={user?.imageUrl || '/default-profile.png'} />
                 <Input
                     type="text"
                     name="inputText"

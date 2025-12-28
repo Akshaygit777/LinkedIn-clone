@@ -7,7 +7,6 @@ import { v2 as cloudinary } from 'cloudinary'
 import connectDB from "./db";
 import { revalidatePath } from "next/cache";
 import { Comment } from "@/models/comment.model";
-import path from "path";
 cloudinary.config({ 
     cloud_name: process.env.CLOUD_NAME, 
     api_key: process.env.API_KEY, 
@@ -105,7 +104,7 @@ export const createCommentAction = async (postId: string, formData: FormData) =>
         await post.save();
 
         revalidatePath("/");
-    } catch (error) {
+    } catch{
         throw new Error('An error occurred')
     }
 }

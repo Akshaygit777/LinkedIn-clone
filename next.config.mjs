@@ -1,4 +1,4 @@
-import { server } from "typescript";
+
 
 const nextConfig = {
     images:{
